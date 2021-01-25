@@ -1,8 +1,7 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 
-import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:rxdart/subjects.dart';
+import 'package:audiofileplayer/audiofileplayer.dart';
 
 void main() {
   runApp(MyApp());
@@ -40,8 +39,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FlareActor("assets/splash.flr",
-          alignment: Alignment.center, fit: BoxFit.contain, animation: "intro"),
+      body: FlareActor(
+        "assets/splash.flr",
+        alignment: Alignment.center,
+        fit: BoxFit.contain,
+        animation: "intro",
+        color: Color(0xff181818),
+      ),
     );
   }
 }
@@ -65,27 +69,32 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  _playSound() {
+  Audio audio = Audio.load(
+      'assets/audios/Jean-Paul Césari - Nicky Larson Générique TV French opening.mp3');
+
+/*   _playSound() {
     return AssetsAudioPlayer.newPlayer().open(
-      Audio(
-          "assets/audios/Jean-Paul Césari - Nicky Larson Générique TV French opening.mp3"),
-      autoStart: true,
-      showNotification: true,
-    );
-  }
+        Audio(
+            "assets/audios/Jean-Paul Césari - Nicky Larson Générique TV French opening.mp3"),
+        autoStart: true,
+        showNotification: true,
+        playInBackground: PlayInBackground.enabled);
+  } */
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-        backgroundColor: Color(0xffffffff),
+        title: Text("Home"),
+        backgroundColor: Color(0xff181818),
       ),
       body: Center(
         child: Text("Hello World"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _playSound,
+        onPressed: () {
+          audio.play();
+        },
         tooltip: 'Play sound',
         child: Icon(Icons.play_arrow),
       ),
