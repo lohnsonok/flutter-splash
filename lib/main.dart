@@ -1,7 +1,14 @@
-import 'package:flare_flutter/flare_actor.dart';
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-import 'package:audiofileplayer/audiofileplayer.dart';
+import 'package:audioplayers/audio_cache.dart';
+import 'package:flare_flutter/flare_actor.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+
+//import 'package:audiofileplayer/audiofileplayer.dart';
+
+import 'package:audioplayers/audioplayers.dart';
 
 void main() {
   runApp(MyApp());
@@ -69,8 +76,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Audio audio = Audio.load(
-      'assets/audios/Jean-Paul Césari - Nicky Larson Générique TV French opening.mp3');
+  AudioCache audioCache = AudioCache();
+  AudioPlayer advancedPlayer = AudioPlayer();
+  String localFilePath;
+
+  //Audio audio = Audio.load(
+  //   'assets/audios/Jean-Paul Césari - Nicky Larson Générique TV French opening.mp3');
 
 /*   _playSound() {
     return AssetsAudioPlayer.newPlayer().open(
@@ -80,6 +91,22 @@ class _MyHomePageState extends State<MyHomePage> {
         showNotification: true,
         playInBackground: PlayInBackground.enabled);
   } */
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (kIsWeb) {
+      // Calls to Platform.isIOS fails on web
+      return;
+    }
+    if (Platform.isIOS) {
+      if (audioCache.fixedPlayer != null) {
+        audioCache.fixedPlayer.startHeadlessService();
+      }
+      advancedPlayer.startHeadlessService();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          audio.play();
+          audioCache.play(
+              'Jean-Paul Césari - Nicky Larson Générique TV French opening.mp3');
         },
         tooltip: 'Play sound',
         child: Icon(Icons.play_arrow),
